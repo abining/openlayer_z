@@ -1,7 +1,4 @@
-// 导入类型声明文件
-/// <reference  path="../package/dist/ol.d.ts"/>
-/** @type {import("ol")} */
-let ol = null;
+// import ol from "../package/dist/ol.d.ts";
 function mapinit(id) {
   var map = new ol.Map({
     target: id,
@@ -40,18 +37,24 @@ function mapinit(id) {
     "EPSG:3857"
   ); // 重庆市的范围坐标（左下角和右上角）
 
+  var ZoomToExtent = new ol.control.ZoomToExtent({
+    tipLable: "初始区域",
+    //使用es6的对象属性简写方法。
+    extent,
+  });
+  // 添加zoomtoextent控件
+  map.addControl(ZoomToExtent);
   map.addControl(
-    new ol.control.ZoomToExtent({
-      extent: extent,
+    new ol.control.Zoom({
+      zoomInTipLabel: "放大",
+      zoomOutTipLabel: "缩小",
     })
   );
+
   // 全图显示	FullScreen
   map.addControl(new ol.control.FullScreen());
-  // 回到初始视图	ZoomToExtent
-  map.addControl(new ol.control.ZoomToExtent());
-  // 比例尺	ScaleLine
-  map.addControl(new ol.control.ScaleLine());
 
+  //
   console.log(ol);
   console.log("hallo");
   return map;

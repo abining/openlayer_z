@@ -1,7 +1,3 @@
-/// <reference  path="./test.d.ts"/>
-/** @type {good} */
-const a = null;
-
 function mapinit(id) {
   var map = new ol.Map({
     target: id,
