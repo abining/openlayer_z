@@ -56,5 +56,7 @@ function mapinit(id) {
   //
   console.log(ol);
   console.log("hallo");
+
+  // 添加图层切换控件
   return map;
 }

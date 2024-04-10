@@ -3,6 +3,11 @@
 	height: 100%;
 	position: absolute;
 }
+/* 获取ol-zoom-out的dom元素 */
 #map .ol-zoom-out{
-margin-top: 415px;
+margin-top: 80px;
+}
+/* 编辑ol-zoomslider，修改成背景为透明 */
+#map .ol-zoomslider{
+    background-color: transparent;
 }

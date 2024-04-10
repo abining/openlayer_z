@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>test8</title>
+	<script src="./package/dist/ol.js"></script>
+	<link rel="stylesheet" type="text/css" href="./package/ol.css" />
+
+	<script src=".js/mapUtils.js"></script>
+	<script src="./js/init8.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/map8.css" />
+</head>
+
+<body>
+	<div id="map">
+		<div id="layControl" class="layControl">
+			<div class="title"><label>图层列表</label></div>
+			<!-- 这是一个无序列表，用于展示图层控制列表 -->
+			<ul>
+				<!-- 第一个列表项，代表图层1 -->
+				<li>
+					<!-- 复选框，用于控制图层1的可见性，初始状态为选中（checked="true"） -->
+					<input id="layer1" type="checkbox" checked="true" />
+					<!-- 标签，显示图层的名称，与之关联的复选框通过class属性进行样式定制 -->
+					<label class="layerItem">图层1</label>
+				</li>
+				<!-- 第二个列表项，代表图层2 -->
+				<li>
+					<!-- 复选框，用于控制图层2的可见性，初始状态为选中（checked="true"） -->
+					<input id="layer2" type="checkbox" checked="true" />
+					<!-- 标签，显示图层的名称，与之关联的复选框通过class属性进行样式定制 -->
+					<label class="layerItem">图层2</label>
+				</li>
+			</ul>
+		</div>
+		<div id="mouse-position">
+
+		</div>
+
+	</div>
+
+	<script>
+		var map = mapinit('map')
+		var layers = map.getLayers();
+		console.log(layers, "layers");
+
+		function addChangeEvent(element, layer) {
+			element.addEventListener("click", function () {
+				if (element.checked) {
+					// 设置图层可见
+					layer.setVisible(true);
+				} else {
+					// 设置图层不可见
+					layer.setVisible(false);
+				}
+			});
+		}
+
+		addChangeEvent(document.getElementById("layer1"), layers.item(0));
+		addChangeEvent(document.getElementById("layer2"), layers.item(1));
+	</script>
+</body>
+
+</html>
