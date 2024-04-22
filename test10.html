@@ -14,7 +14,7 @@
 </head>
 
 <body>
-	<div id="tool" class="Toollib">
+	<div id="menu">
 		<label style="font-weight: bold;">几何图形类型</label>
 		<select id="type">
 			<option value="None" selected="selected">无</option>
@@ -67,10 +67,136 @@
 			],
 		});
 		map.addControl(overviewMap);
+
 		var layers = map.getLayers();
 		console.log(layers, "layers");
+		// 加载图层控制
 		loadLayerControl(map, 'layerTree')
 
+		// 定义点数组
+		var track = [{
+			lon: "120.1678",
+			lat: "30.2609"
+		},
+		{
+			lon: "120.1679",
+			lat: "30.2569"
+		},
+		{
+			lon: "120.1697",
+			lat: "30.2204"
+		},
+		{
+			lon: "120.1570",
+			lat: "30.2069"
+		},
+		{
+			lon: "120.0987",
+			lat: "30.1869"
+		},
+		{
+			lon: "120.0434",
+			lat: "30.2493"
+		},
+		];
+		// 绘制
+		function DrawFeature() {
+			// 用document.getElementById方法获取id是type的select元素
+			var typeSelected = document.getElementById('type');
+			// 获取选择框的value属性
+			var drawType = typeSelected.value;
+			if (drawType == "Point") {
+				// 定义要素数组
+				var features = [];
+				// 遍历全局点数组变量
+				for (var i = 0; i < track.length; i++) {
+					// 获取点的坐标并做投影转换
+					var coordinate = ol.proj.fromLonLat([track[i].lon, track[i].lat])
+					// 实例化ol.Feature，其中定义geometry属性为实例化的geom.Point
+					features[i] = new ol.Feature({
+						geometry: new ol.geom.Point(coordinate)
+					})
+				}
+				// 循环后，实例化一个Vector图层
+				var PointLayer = new ol.layer.Vector({
+					// source属性，实例化的ol.source.Vector，其中features为上几个步骤的features
+					source: new ol.source.Vector({
+						features: features
+					}),
+					// style属性，实例化的ol.style.Style（颜色可自行设置），这里设置成红色
+					style: new ol.style.Style({
+						image: new ol.style.Circle({
+							radius: 5,
+							stroke: new ol.style.Stroke({
+								color: '#000000'
+							}),
+							fill: new ol.style.Fill({
+								color: '#ff0000'
+							})
+						})
+					})
+				})
+				map.addControl(PointLayer);
+			} else if (drawType == "LineString") {
+				// 设置线数组
+				var lineArr = [];
+				// 循环全局点数组变量转换坐标将每个点坐标放入线数组
+				for (var i = 0; i < track.length; i++) {
+					var coordinate = ol.proj.fromLonLat([track[i].lon, track[i].lat]);
+					lineArr[i] = coordinate;
+				}
+				// 实例化ol.Feature，geometry为ol.geom.LineString，传入线数组
+				var feature = new ol.Feature({
+					geometry: new ol.geom.LineString(lineArr)
+				})
+				// 实例化一个Vector图层
+				var LineLayer = new ol.layer.Vector({
+					// source，值为实例化的ol.source.Vector，属性为数组，数组中放入上文定义的Feature一个元素
+					source: new ol.source.Vector({
+						features: [feature]
+					}),
+					// 样式
+					style: new ol.style.Style({
+						stroke: new ol.style.Stroke({
+							color: '#ff0000',
+							width: 5
+						})
+					})
+				})
+				map.addControl(LineLayer);
+			} else if (drawType == "Polygon") {
+				// 设置polygon数组
+				var polygonArr = [];
+				// 循环全局点数组变量，转换坐标，并将每个点坐标放入多边形数组
+				for (var i = 0; i < track.length; i++) {
+					var coordinate = ol.proj.fromLonLat([track[i].lon, track[i].lat]);
+					polygonArr[i] = coordinate;
+				}
+				// 实例化ol.Feature，geometry为ol.geom.Polygon，传入多边形数组
+				var Feature = new ol.Feature({
+					geometry: new ol.geom.Polygon([polygonArr])
+				});
+				// 实例化一个Vector图层，source为包含上述feature的Vector源
+				var PolyLayer = new ol.layer.Vector({
+					source: new ol.source.Vector({
+						features: [Feature]
+					}),
+					// 为图层设置样式，这里定义了线条颜色、宽度、填充颜色
+					style: new ol.style.Style({
+						stroke: new ol.style.Stroke({
+							color: '#00ff00', // 绿色线条
+							width: 3 // 线条宽度为3像素
+						}),
+						fill: new ol.style.Fill({
+							color: 'rgba(255, 0, 0, 0.1)' // 填充颜色为淡红色，0.1的透明度
+						})
+					})
+				});
+				map.addControl(PolyLayer);
+			} else { //选的是无
+				alert("请选择一种几何形状进行绘制")
+			}
+		}
 	</script>
 </body>
 
