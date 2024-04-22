@@ -5,9 +5,32 @@
 }
 /* 获取ol-zoom-out的dom元素 */
 #map .ol-zoom-out{
-margin-top: 80px;
+margin-top: 250px;
 }
 /* 编辑ol-zoomslider，修改成背景为透明 */
 #map .ol-zoomslider{
     background-color: transparent;
+	z-index:999;
+	
+}
+
+#map .ol-zoom-extent{
+	margin-top: 230px;
+}
+
+#mousePotion{
+	position: absolute;
+	background-color: #ffffff;
+	width: 200px;
+	height: 20px;
+	z-index: 2000;
+	bottom: 2px;
+	right: 2px;
+	
+}
+
+.custom-mouse-position{
+	font-size: 16px;
+	font-family: '微软雅黑';
+	color:rgb(0,0,0)
 }

@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>test5</title>
-		<script src="./package/dist/ol.js"></script>
-		<link rel="stylesheet" type="text/css" href="./package/ol.css" />
-		<script src="./js/init5.js"></script>
 
-		<link rel="stylesheet" type="text/css" href="./css/map5.css" />
-	</head>
-	<body>
-		<div id="map"></div>
+<head>
+	<meta charset="utf-8">
+	<title>test5</title>
+	<script src="./package/dist/ol.js"></script>
+	<link rel="stylesheet" type="text/css" href="./package/ol.css" />
+	<script src="./js/init5.js"></script>
 
-		<script>
-			var map = mapinit('map')
-		</script>
-	</body>
+	<link rel="stylesheet" type="text/css" href="./css/map5.css" />
+</head>
+
+<body>
+	<div id="map">
+		<div id='mousePotion' style="margin-bottom: 20px;"></div>
+	</div>
+
+	<script>
+		var map = mapinit('map')
+		map.addControl(
+			new ol.control.Zoom({
+				zoomInTipLabel: "放大",
+				zoomOutTipLabel: "缩小",
+			})
+		);
+	</script>
+</body>
+
 </html>
