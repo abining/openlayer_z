@@ -1,6 +1,6 @@
 #map{
 	width: 100%;
-	height: 100%;
+	height: calc(100vh - 60px);
 	position: absolute;
 }
 /* 获取ol-zoom-out的dom元素 */
@@ -11,7 +11,7 @@ margin-top: 250px;
 #map .ol-zoomslider{
     background-color: transparent;
 	z-index:999;
-	
+	/* margin-top: -20px; */
 }
 
 #map .ol-zoom-extent{

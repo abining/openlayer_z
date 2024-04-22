@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>test6</title>
+	<script src="./package/dist/ol.js"></script>
+	<link rel="stylesheet" type="text/css" href="./package/ol.css" />
+	<script src="./js/init6.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/map6.css" />
+	<link rel="stylesheet" type="text/css" href="./css/style.css" />
+</head>
+
+<body>
+	<div id="tool" class="Toollib">
+		<input type="button" class="Buttonilib" id="zoom-out" value="单击缩小" />
+		<input type="button" class="Buttonilib" id="zoom-in" value="单击放大" />
+		<input type="button" class="Buttonilib" id="panto" value="平移到浙江" />
+	</div>
+
+	<div>
+		<div id="map" class="mapclass">
+			<div id='mousePotion'></div>
+		</div>
+	</div>
+	<script>
+		var map = mapinit('map', 120, 30, 9);
+
+		// 实例化自定义的缩放控件，传入lebel，并且添加到地图中
+		map.addControl(
+			new ol.control.Zoom({
+				zoomInTipLabel: "放大",
+				zoomOutTipLabel: "缩小",
+			})
+		);
+		//加入鹰眼效果
+		var overviewMap = new ol.control.OverviewMap({
+			collapsed: false,
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.XYZ({
+						ur1: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+						wrapX: false,
+					}),
+				}),
+				new ol.layer.Tile({
+					source: new ol.source.XYZ({
+						url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+						wrapX: false,
+					}),
+				}),
+			],
+		});
+		map.addControl(overviewMap);
+
+		// 添加滑动控制缩放的控件
+		map.addControl(new ol.control.ZoomSlider());
+		// 比例尺	ScaleLine
+		map.addControl(new ol.control.ScaleLine());
+		// ZoomToExtent  回到初始视图
+		// 创建重庆市的范围对象
+		var extent = ol.proj.transformExtent(
+			[106.2554, 29.4914, 106.7226, 30.1987],
+			"EPSG:4326",
+			"EPSG:3857"
+		); // 重庆市的范围坐标（左下角和右上角）
+
+		var ZoomToExtent = new ol.control.ZoomToExtent({
+			tipLable: "初始区域",
+			//使用es6的对象属性简写方法。
+			extent,
+		});
+		// 添加zoomtoextent控件
+		map.addControl(ZoomToExtent);
+		/**
+		 * 这个方法需要在函数外部才能实现。
+		 */
+		// // 实例化自定义的缩放控件，传入lebel
+		// var ZoomControl = new ol.control.Zoom({
+		//   zoomInTipLabel: "放大",
+		//   zoomOutTipLabel: "缩小",
+		// });
+		// // 实例化好的缩放控件添加到地图容器中
+		// map.addControl(ZoomControl);
+
+		// 全图显示	FullScreen
+		map.addControl(new ol.control.FullScreen());
+
+		//鼠标位置显示对象
+		var mousePositionCtrl = new ol.control.MousePosition({
+			target: "mousePotion",
+			projection: "EPSG:4326",
+			coordinateFormat: new ol.coordinate.createStringXY(5),
+			className: "customMousePs",
+		});
+		map.addControl(mousePositionCtrl);
+		// 添加点击缩放事件
+		document.getElementById('zoom-in').onclick = function () {
+			var view = map.getView();
+			var zoom = view.getZoom();
+			view.setZoom(zoom + 1);
+		}
+		// 添加点击缩放事件,缩小
+		document.getElementById('zoom-out').onclick = function () {
+			var view = map.getView();
+			var zoom = view.getZoom();
+			view.setZoom(zoom - 1);
+		}
+		// 缩放到浙江
+		document.getElementById('panto').onclick = function () {
+			// map对象中获取视图（View）对象
+			var view = map.getView();
+			// 使用ol.proj.fromLonLat方法将经纬度坐标转换为地图当前投影的坐标系。
+			var center = ol.proj.fromLonLat([120, 30]);
+			// 将视图的中心点设置为转换得到的坐标点。
+			view.setCenter(center);
+			// 视图的缩放级别设置为6
+			view.setZoom(6);
+		}
+	</script>
+</body>
+
+</html>

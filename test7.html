@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>test7</title>
+	<script src="./package/dist/ol.js"></script>
+	<link rel="stylesheet" type="text/css" href="./package/ol.css" />
+	<script src="./js/init7.js"></script>
+	<script src="./js/math.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/map7.css" />
+	<link rel="stylesheet" type="text/css" href="./css/style.css" />
+</head>
+
+<body>
+	<div id="tool" class="Toollib">
+		<input type="button" class="Buttonilib" id="goto" value="直接定位" />
+		<input type="button" class="Buttonilib" id="spin" value="旋转定位" />
+		<input type="button" class="Buttonilib" id="bounce" value="弹性定位" />
+		<input type="button" class="Buttonilib" id="fly" value="飞行定位" />
+		<input type="button" class="Buttonilib" id="flydisign" value="飞行定位自定义" />
+	</div>
+
+	<div>
+		<div id="map" class="mapclass">
+			<div id='mousePotion'></div>
+		</div>
+	</div>
+	<script>
+		var map = mapinit('map', 120, 30, 9);
+
+		// 实例化自定义的缩放控件，传入lebel，并且添加到地图中
+		map.addControl(
+			new ol.control.Zoom({
+				zoomInTipLabel: "放大",
+				zoomOutTipLabel: "缩小",
+			})
+		);
+		//加入鹰眼效果
+		var overviewMap = new ol.control.OverviewMap({
+			collapsed: false,
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.XYZ({
+						ur1: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+						wrapX: false,
+					}),
+				}),
+				new ol.layer.Tile({
+					source: new ol.source.XYZ({
+						url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+						wrapX: false,
+					}),
+				}),
+			],
+		});
+		map.addControl(overviewMap);
+
+		// 添加滑动控制缩放的控件
+		map.addControl(new ol.control.ZoomSlider());
+		// 比例尺	ScaleLine
+		map.addControl(new ol.control.ScaleLine());
+		// ZoomToExtent  回到初始视图
+		// 创建重庆市的范围对象
+		var extent = ol.proj.transformExtent(
+			[106.2554, 29.4914, 106.7226, 30.1987],
+			"EPSG:4326",
+			"EPSG:3857"
+		); // 重庆市的范围坐标（左下角和右上角）
+
+		var ZoomToExtent = new ol.control.ZoomToExtent({
+			tipLable: "初始区域",
+			//使用es6的对象属性简写方法。
+			extent,
+		});
+		// 添加zoomtoextent控件
+		map.addControl(ZoomToExtent);
+		/**
+		 * 这个方法需要在函数外部才能实现。
+		 */
+		// // 实例化自定义的缩放控件，传入lebel
+		// var ZoomControl = new ol.control.Zoom({
+		//   zoomInTipLabel: "放大",
+		//   zoomOutTipLabel: "缩小",
+		// });
+		// // 实例化好的缩放控件添加到地图容器中
+		// map.addControl(ZoomControl);
+
+		// 全图显示	FullScreen
+		map.addControl(new ol.control.FullScreen());
+
+		//鼠标位置显示对象
+		var mousePositionCtrl = new ol.control.MousePosition({
+			target: "mousePotion",
+			projection: "EPSG:4326",
+			coordinateFormat: new ol.coordinate.createStringXY(5),
+			className: "customMousePs",
+		});
+		map.addControl(mousePositionCtrl);
+		// map对象中获取视图（View）对象
+		var view = map.getView();
+		// 定义北京、沈阳、上海、杭州坐标的全局变量
+		var beijing = ol.proj.fromLonLat([116.28, 39.54]);
+		var shenyang = ol.proj.fromLonLat([123.24, 41.50]);
+		var shanghai = ol.proj.fromLonLat([121.39, 31.14]);
+		var hangzhou = ol.proj.fromLonLat([120.17, 30.25]);
+
+		//直接定位
+		document.getElementById("goto").onclick = function () {
+			// ①首先用全局变量view的getZoom方法获取当前缩放层级
+			var view = map.getView();
+			// ②用view的setCenter方法将视图中心设置成北京（即传入参数是beijing）
+			view.setCenter(beijing);
+			// ③用view的setZoom方法设置缩放层级，传入参数是①获取的层级变量
+			view.setZoom(zoom);
+		}
+
+
+
+		//旋转定位(先旋转半圈，再旋转半圈)
+		document.getElementById("spin").onclick = function () {
+			// 获取当前位置
+			var center = view.getCenter();
+			view.animate({
+				center: [(center[0] + shenyang[0]) / 2, (center[1] + shenyang[1]) / 2],
+				rotation: Math.PI,
+				easing: ol.easing.easeIn
+			}, {
+				center: shenyang,
+				rotation: 2 * Math.PI,
+				easing: ol.easing.easeOut
+			})
+		}
+
+		//弹性定位
+		document.getElementById("bounce").onclick = function () {
+			view.animate({
+				center: shanghai,
+				duration: 2000,
+				easing: bounce
+			})
+		}
+
+		//飞行定位
+		document.getElementById("fly").onclick = function () {
+			var zoom = view.getZoom();
+			view.animate({
+				zoom: zoom - 1
+			}, {
+				center: hangzhou,
+				duration: 2000
+			}, {
+				zoom: zoom
+			},)
+		}
+
+		// 定义坐标点
+		// 注意：以下坐标是示例值，实际坐标需要根据具体位置查询获得
+		var zjwedu = ol.proj.fromLonLat([120.36892, 30.31710]); // 浙江水利水电学院钱塘校区的经纬度坐标
+		var hangzhouEastStation = ol.proj.fromLonLat([120.20776, 30.29432]); // 杭州火车东站的经纬度坐标
+		var westlake = ol.proj.fromLonLat([120.12446, 30.26118]); // 西湖的经纬度坐标
+
+		// 飞行定位函数
+		document.getElementById("flydisign").onclick = function () {
+			var view = map.getView();
+			view.setZoom(14); // 设置新的缩放级别
+
+			var startZoom = view.getZoom(); // 获取当前缩放级别
+			// alert(startZoom)
+
+			view.animate({
+				// 快速定位到学校
+				center: zjwedu,
+				zoom: startZoom, // 减少1级缩放，实现视角升起效果
+				duration: 1000 // 动画持续时间1000毫秒（1秒）
+			},
+				{// 从学校升起视角
+					center: zjwedu,
+					zoom: startZoom - 1, // 增加1级缩放，实现视角升起效果
+					duration: 2000 // 动画持续时间2000毫秒（1秒）
+				}, {
+				// 飞行到火车东站
+				center: hangzhouEastStation,
+				zoom: startZoom - 1, // 恢复到初始缩放级别
+				duration: 1000
+			}, {
+				//从火车东站下降视角
+				center: hangzhouEastStation,
+				zoom: startZoom + 1, // 增加1级缩放，实现视角进一步升起效果
+				duration: 2000 // 动画持续时间2秒
+			}, {
+				//从火车东站升起视角
+				center: hangzhouEastStation,
+				zoom: startZoom - 1, // 增加1级缩放，实现视角进一步升起效果
+				duration: 2000 // 动画持续时间2秒
+			}, {
+				// 飞行到西湖
+				center: westlake,
+				zoom: startZoom - 1, // 恢复到初始缩放级别
+				duration: 1000
+			},
+				{
+					// 在西湖下降
+					center: westlake,
+					zoom: startZoom + 1, // 减少缩放级别，实现视角下降效果
+					duration: 2000 // 动画持续时间2秒
+				}
+			);
+		};
+	</script>
+</body>
+
+</html>

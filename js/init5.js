@@ -43,18 +43,13 @@ function mapinit(id) {
   });
   // 添加zoomtoextent控件
   map.addControl(ZoomToExtent);
-  // 初始化
+  // 实例化自定义的缩放控件，传入lebel
   var ZoomControl = new ol.control.Zoom({
     zoomInTipLabel: "放大",
     zoomOutTipLabel: "缩小",
   });
+  // 实例化好的缩放控件添加到地图容器中
   map.addControl(ZoomControl);
-  // map.addControl(
-  //   new ol.control.Zoom({
-  //     zoomInTipLabel: "放大",
-  //     zoomOutTipLabel: "缩小",
-  //   })
-  // );
 
   // 全图显示	FullScreen
   map.addControl(new ol.control.FullScreen());
@@ -67,25 +62,6 @@ function mapinit(id) {
     className: "customMousePs",
   });
   map.addControl(mousePositionCtrl);
-  //加入鹰眼效果
-  var overviewMap = new ol.control.OverviewMap({
-    collapsed: false,
-    layers: [
-      new ol.layer.Tile({
-        source: new ol.source.XYZ({
-          ur1: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
-          wrapX: false,
-        }),
-      }),
-      new ol.layer.Tile({
-        source: new ol.source.XYZ({
-          url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
-          wrapX: false,
-        }),
-      }),
-    ],
-  });
-  map.addControl(overviewMap);
 
   console.log(ol);
   console.log("hallo");

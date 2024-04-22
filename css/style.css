@@ -1,0 +1,37 @@
+.Toollib {
+	border-radius: 3px;
+	overflow: hidden;
+	width: 100%;
+	height: auto;
+	box-shadow: 0 0 2px 1px #949292;
+	text-align: center;
+	z-index: 2001;
+	border:1px solide #66ccff;
+	border-bottom: 1px solid #949292;
+	margin-top: 2px; 
+  }
+.Buttonilib{
+	color: #0075c7; /* 设置文本颜色为 #0075c7，一种蓝色调 */
+	display: inline-block; /* 设置元素的显示方式为内联块，允许指定宽高等属性，同时能与其他元素并排 */
+	padding: 3px 5px; /* 设置内边距，上下为3px，左右为5px，增加元素内部的空间 */
+	margin-top: 4px; /* 设置元素顶部外边距为4px，增加元素与其他元素之间的空间 */
+	margin-bottom: 4px; /* 设置元素底部外边距为4px */
+	margin-left: 4px; /* 设置元素左侧外边距为4px */
+	margin-right: 4px; /* 设置元素右侧外边距为4px */
+	font-size: 12px; /* 设置字体大小为12像素 */
+	font-weight: 400; /* 设置字体粗细为400，这是正常的字体粗细 */
+	line-height: 1.5; /* 设置行高为字体大小的1.5倍，影响行与行之间的距离 */
+	text-align: center; /* 设置文本水平居中对齐 */
+	white-space: nowrap; /* 设置元素内的文本不进行换行，保持在同一行内显示 */
+	vertical-align: middle; /* 设置元素在竖直方向上居中对齐 */
+	border: 1px solid transparent; /* 设置元素边框为1像素的实线，初始颜色为透明 */
+	border-color: #0075c7; /* 设置边框颜色为 #0075c7，但由于border属性已定义，此行将被覆盖 */
+	border-radius: 3px; /* 设置元素边框的圆角为3像素，使边框边缘更平滑 */
+	background-image: none; /* 不显示背景图像 */
+	background-color: transparent; /* 设置背景颜色为透明 */
+	
+}
+.Buttonilib:hover{
+	color: white;
+	background-color: #0075c7;
+}
