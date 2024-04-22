@@ -3,12 +3,14 @@
 	overflow: hidden;
 	width: 100%;
 	height: auto;
+	min-height: 50px;
 	box-shadow: 0 0 2px 1px #949292;
 	text-align: center;
 	z-index: 2001;
 	border:1px solide #66ccff;
 	border-bottom: 1px solid #949292;
 	margin-top: 2px; 
+	
   }
 .Buttonilib{
 	color: #0075c7; /* 设置文本颜色为 #0075c7，一种蓝色调 */

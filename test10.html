@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>test10</title>
+	<script src="./package/dist/ol.js"></script>
+	<link rel="stylesheet" type="text/css" href="./package/ol.css" />
+
+	<script src="./js/mapUtils.js"></script>
+	<script src="./js/init10.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/style.css" />
+	<link rel="stylesheet" type="text/css" href="./css/map10.css" />
+</head>
+
+<body>
+	<div id="tool" class="Toollib">
+		<label style="font-weight: bold;">几何图形类型</label>
+		<select id="type">
+			<option value="None" selected="selected">无</option>
+			<option value="Point">点</option>
+			<option value="LineString">线</option>
+			<option value="Polygon">多边形</option>
+		</select>
+		<button onclick="DrawFeature()">绘制</button>
+	</div>
+	<div id="map">
+		<div id="layControl" class="layControl">
+			<div class="title"><label>图层列表</label></div>
+			<!-- 这是一个无序列表，用于展示图层控制列表 -->
+			<ul id="layerTree" class="layerTree">
+
+			</ul>
+		</div>
+		<div id="mouse-position">
+
+		</div>
+
+	</div>
+
+	<script>
+		var map = mapinit('map', 120, 30, 9);
+
+		// 实例化自定义的缩放控件，传入lebel，并且添加到地图中
+		map.addControl(
+			new ol.control.Zoom({
+				zoomInTipLabel: "放大",
+				zoomOutTipLabel: "缩小",
+			})
+		);
+		//加入鹰眼效果
+		var overviewMap = new ol.control.OverviewMap({
+			collapsed: false,
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.XYZ({
+						ur1: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+						wrapX: false,
+					}),
+				}),
+				new ol.layer.Tile({
+					source: new ol.source.XYZ({
+						url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+						wrapX: false,
+					}),
+				}),
+			],
+		});
+		map.addControl(overviewMap);
+		var layers = map.getLayers();
+		console.log(layers, "layers");
+		loadLayerControl(map, 'layerTree')
+
+	</script>
+</body>
+
+</html>
