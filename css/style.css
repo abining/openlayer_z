@@ -37,3 +37,19 @@
 	color: white;
 	background-color: #0075c7;
 }
+
+/* 定义按钮的默认样式 */
+#drawButton {
+	border-radius: 4px;
+    padding: 5px 20px;
+    background-color: gray;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* 定义按钮的激活（点击后）样式 */
+#drawButton.active {
+    background-color: #28a745; /* 绿色，表示激活状态 */
+}
