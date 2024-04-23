@@ -1,7 +1,12 @@
 function mapinit(id) {
+  var projection = new ol.proj.Projection({
+    code:'EPSG:4326',
+    units:'degrees'
+  })
   var map = new ol.Map({
     target: id,
     view: new ol.View({
+      // projection:projection,
       center: ol.proj.fromLonLat([120, 30]), // 重庆
       maxZoom: 15,
       minZoom: 7,
@@ -9,21 +14,57 @@ function mapinit(id) {
     }),
   });
   var veclayer = new ol.layer.Tile({
-    title: "天地图矢量图层底图",
+    title: "天地图卫星图层底图",
     source: new ol.source.XYZ({
-      url: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+      url: "http://t0.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
       wrapX: false,
     }),
   });
   var vcalayer = new ol.layer.Tile({
     title: "天地图矢量图层标记",
     source: new ol.source.XYZ({
-      url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+      url: "http://t0.tianditu.gov.cn/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
       wrapX: false,
     }),
   });
   map.addLayer(veclayer);
   map.addLayer(vcalayer);
+
+
+  		//添加新的图层（本机的自定义的图层）
+      var wmsSource = new ol.source.ImageWMS({
+        url:'http://localhost:8080/geoserver/webgis/wms',
+        params:{
+          'FORMAT':'image/png',
+          'VERSION':'1.1.1',
+          'LAYERS':'webgis:webgis-roads'
+        }
+      })
+  
+      var wmsLayer = new ol.layer.Image({
+        title:'wms道路',
+        source:wmsSource
+      })
+  
+      map.addLayer(wmsLayer)
+//添加title道路
+      var wmsTiledSource = new ol.source.TileWMS({
+				url: 'http://localhost:8088/geoserver/url/wms',
+				params: {
+					'FORMAT': 'image/png',
+					'VERSION': '1.1.1',
+					"LAYERS": 'webgis:webgis-roads',
+					tiled: true
+				}
+			})
+
+			var wmsTiledLayer = new ol.layer.Tile({
+				title: 'wmsTiled道路',
+				source: wmsTiledSource
+			})
+			map.addLayer(wmsTiledLayer)
+
+
   // 添加滑动控制缩放的控件
   map.addControl(new ol.control.ZoomSlider());
   // 比例尺	ScaleLine
