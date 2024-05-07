@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>test15</title>
+    <script src="./package/dist/ol.js"></script>
+    <link rel="stylesheet" type="text/css" href="./package/ol.css" />
+
+    <script src="./js/mapUtils.js"></script>
+    <script src="./js/init15.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./css/map10.css" />
+  </head>
+
+  <body>
+    <div id="map">
+      <div id="layControl" class="layControl">
+        <div class="title"><label>图层列表</label></div>
+        <!-- 这是一个无序列表，用于展示图层控制列表 -->
+        <ul id="layerTree" class="layerTree"></ul>
+      </div>
+      <div id="mouse-position"></div>
+    </div>
+
+    <script>
+      var map = mapinit("map", 120, 30, 9);
+
+      // 实例化自定义的缩放控件，传入lebel，并且添加到地图中
+      map.addControl(
+        new ol.control.Zoom({
+          zoomInTipLabel: "放大",
+          zoomOutTipLabel: "缩小",
+        })
+      );
+      //加入鹰眼效果
+      var overviewMap = new ol.control.OverviewMap({
+        collapsed: false,
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.XYZ({
+              ur1: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+              wrapX: false,
+            }),
+          }),
+          new ol.layer.Tile({
+            source: new ol.source.XYZ({
+              url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+              wrapX: false,
+            }),
+          }),
+        ],
+      });
+      map.addControl(overviewMap);
+      // 实例化wfs资源
+      var wfsSource = new ol.source.Vector({
+        // format: new ol.format.GeoJSON(),
+        // 这里可以选择性地取消注释并修正下面的url生成函数
+        format: new ol.format.GeoJSON({
+          defaultDataProjection: "EPSG:4326", // 确保数据的坐标投影与你的地图一致
+        }),
+        // url: function (extent) {
+        //   // 构建请求URL，使用当前地图的视图范围（bbox）
+        //   var urlstr =
+        //     "http://localhost:8080/geoserver/webgis/ows?" +
+        //     "service=WFS&" +
+        //     "version=1.0.0&" +
+        //     "request=GetFeature&" +
+        //     "typeName=webgis%3Aroad2_line&" +
+        //     "maxFeatures=50&" +
+        //     "outputFormat=application%2Fjson&" +
+        //     "bbox=" +
+        //     extent.join(","); // 将视图范围的坐标拼接到URL中
+        //   return urlstr;
+        // },
+        url: "rold2.json", // 确保文件名与实际文件相匹配
+      });
+
+      // 实例化矢量图层
+      var wfslayer = new ol.layer.Vector({
+        title: "2级道路",
+        source: wfsSource,
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: "#ff0000",
+            width: 5,
+          }),
+        }),
+      });
+
+      // 加载图层到Map实例
+      map.addLayer(wfslayer);
+
+      // 调试代码
+      var layers = map.getLayers();
+      console.log(layers, "layers");
+
+      // 加载图层控制
+      loadLayerControl(map, "layerTree");
+    </script>
+  </body>
+</html>

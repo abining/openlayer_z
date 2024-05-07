@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>test16</title>
+	<script src="./package/dist/ol.js"></script>
+	<link rel="stylesheet" type="text/css" href="./package/ol.css" />
+
+	<script src="./js/mapUtils.js"></script>
+	<script src="./js/init16.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/style.css" />
+	<link rel="stylesheet" type="text/css" href="./css/map10.css" />
+</head>
+
+<body>
+	<!-- <div id="menu">
+		<label style="font-weight: bold;">几何图形类型</label>
+		<select id="type">
+			<option value="None" selected="selected">无</option>
+			<option value="Point">点</option>
+			<option value="LineString">线</option>
+			<option value="Polygon">多边形</option>
+		</select>
+		<button onclick="DrawFeature()" id="drawButton">绘制</button>
+	</div> -->
+	<div id="map">
+		<div id="layControl" class="layControl">
+			<div class="title"><label>图层列表</label></div>
+			<!-- 这是一个无序列表，用于展示图层控制列表 -->
+			<ul id="layerTree" class="layerTree">
+
+			</ul>
+		</div>
+		<div id="mouse-position">
+
+		</div>
+
+	</div>
+
+	<script>
+		var map = mapinit('map', 120, 30, 9);
+
+		// 实例化自定义的缩放控件，传入lebel，并且添加到地图中
+		map.addControl(
+			new ol.control.Zoom({
+				zoomInTipLabel: "放大",
+				zoomOutTipLabel: "缩小",
+			})
+		);
+		//加入鹰眼效果
+		var overviewMap = new ol.control.OverviewMap({
+			collapsed: false,
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.XYZ({
+						ur1: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+						wrapX: false,
+					}),
+				}),
+				new ol.layer.Tile({
+					source: new ol.source.XYZ({
+						url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+						wrapX: false,
+					}),
+				}),
+			],
+		});
+		map.addControl(overviewMap);
+
+		var layers = map.getLayers();
+		console.log(layers, "layers");
+		// 加载图层控制
+		loadLayerControl(map, 'layerTree')
+
+
+		// 实例化一个矢量数据源Vector作为图层的source
+		var source = new ol.source.Vector();
+		var vectorLayer = new ol.layer.Vector({
+			source: source,
+			style: new ol.style.Style({
+				fill: new ol.style.Fill({
+					color: '#0055ff'
+				}),
+				stroke: new ol.style.Stroke({
+					color: '#00C033',
+					width: 2
+				}),
+				image: new ol.style.Circle({
+					radius: 7,
+					fill: new ol.style.Fill({
+						color: '#00C033'
+					})
+				})
+			})
+		})
+		map.addLayer(vectorLayer);
+		// 编写交互方法
+		// 		用document.getElementById获取选择框，赋值给新建的typeSelect变量
+		var typeSelect = document.getElementById('type');
+		// 定义一个draw（用来在后续方法中存放Interaction）
+		var draw;
+
+		function addInteraction() {
+			// 获取选择框select选择的value属性
+			var typeValue = typeSelect.value;
+			if (typeValue == 'None') {
+				//清空数据
+				source.clear();
+			} else {
+				draw = new ol.interaction.Draw({
+					source: source,
+					type: typeValue
+				})
+				map.addInteraction(draw)
+			}
+		}
+		typeSelect.onchange = function () {
+			var btn = document.getElementById('drawButton');
+			// 如果直接根据选择框的内容判断是否绘图，就使用下面的方法
+			// 判断按钮是否激活
+			var isActive = btn.classList.contains('active');
+			// 如果激活了
+			if (isActive) {
+				// 先移除交互
+				map.removeInteraction(draw);
+				// 开始绘图
+				addInteraction()
+			} else {
+				alert('请先激活绘图按钮')
+			}
+		}
+
+		function DrawFeature() {
+
+			// 切换按钮的激活状态
+			var btn = document.getElementById('drawButton');
+			btn.classList.toggle('active');
+
+		}
+
+		// loadLayerControl(map,'layerTree')
+	</script>
+</body>
+
+</html>
