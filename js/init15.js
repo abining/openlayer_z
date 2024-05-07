@@ -94,9 +94,7 @@ function mapinit(id) {
   // 全图显示	FullScreen
   map.addControl(new ol.control.FullScreen());
 
-  //
-  console.log(ol);
-  console.log("hallo");
+
 
   // 添加图层切换控件
   return map;
