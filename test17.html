@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>test16</title>
-    <script src="./package/dist/ol.js"></script>
-    <link rel="stylesheet" type="text/css" href="./package/ol.css" />
 
-    <script src="./js/mapUtils.js"></script>
-    <script src="./js/init16.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <link rel="stylesheet" type="text/css" href="./css/map10.css" />
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <title>test17</title>
+  <script src="./package/dist/ol.js"></script>
+  <link rel="stylesheet" type="text/css" href="./package/ol.css" />
 
-  <body>
-    <div id="map">
-      <div id="layControl" class="layControl">
-        <div class="title"><label>图层列表</label></div>
-        <!-- 这是一个无序列表，用于展示图层控制列表 -->
-        <ul id="layerTree" class="layerTree"></ul>
-        <button id="button">跳到村子里</button>
+  <script src="./js/mapUtils.js"></script>
+  <script src="./js/init16.js"></script>
+  <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  <link rel="stylesheet" type="text/css" href="./css/map10.css" />
+</head>
+
+<body>
+  <div id="map">
+    <div id="layControl" class="layControl">
+      <div class="title"><label>图层列表</label></div>
+      <!-- 这是一个无序列表，用于展示图层控制列表 -->
+      <ul id="layerTree" class="layerTree"></ul>
+      <button id="button">跳到村子里</button>
+    </div>
+    <!-- 添加页面右键的弹出框 -->
+    <div id="popup" class="ol-popup">
+      <!-- 弹出框头部 -->
+      <div id="popup-header" class="ol-popup-header" style="width: 100%; height: 20px;
+      background-color: blueviolet;">
+        <!-- 设置标题，宋体，加粗，#fff，15px ，左对齐，顶部5px，左侧8px-->
+        <div id="popup-title" style="font-family: '宋体'; font-weight: bold; color: #fff; font-size: 15px; text-align: left;
+        padding-top: 5px; padding-left: 8px;">
+          信息
+        </div>
+        <!-- 右上角的小❌，用来关闭弹窗 -->
+        <a href="#" id="popup-close-button" class="ol-popup-closer" style="background-color: #8e908c;">❌</a>
+        <!-- 弹出框内容 -->
+        <div id="popup-content" class="ol-popup-content" style="padding: 10px;">
+
+
+        </div>
       </div>
       <div id="mouse-position"></div>
     </div>
@@ -106,7 +125,7 @@
             "#ff557f",
           ];
           var type = feature.get("TBLXMC");
-		  var drawcolor = ''
+          var drawcolor = ''
           switch (type) {
             case "公路":
               drawcolor = colors[0];
@@ -145,23 +164,23 @@
               drawcolor = colors[11];
               break;
             default:
-				drawcolor = '#fff'
+              drawcolor = '#fff'
               break;
           }
-		  let style = new ol.style.Style({
-			stroke:new ol.style.Stroke({
-				color:'#6b6b6b',
-				width:1
-			}),
-			fill: new ol.style.Fill({
-				color:drawcolor
-			}),
-			text: new ol.style.Text({
-				text:type
-			})
-		  })
+          let style = new ol.style.Style({
+            stroke: new ol.style.Stroke({
+              color: '#6b6b6b',
+              width: 1
+            }),
+            fill: new ol.style.Fill({
+              color: drawcolor
+            }),
+            text: new ol.style.Text({
+              text: type
+            })
+          })
 
-		  return style
+          return style
         },
       });
 
@@ -191,8 +210,13 @@
         zoomToLocation(map, 127.48453635200008, 46.89495381100005, 12);
       });
 
+
       // 加载图层控制
       loadLayerControl(map, "layerTree");
     </script>
-  </body>
+    <style>
+
+    </style>
+</body>
+
 </html>
