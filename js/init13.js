@@ -49,7 +49,7 @@ function mapinit(id) {
       map.addLayer(wmsLayer)
 //添加title道路
       var wmsTiledSource = new ol.source.TileWMS({
-				url: 'http://localhost:8088/geoserver/url/wms',
+				url: 'http://localhost:8080/geoserver/url/wms',
 				params: {
 					'FORMAT': 'image/png',
 					'VERSION': '1.1.1',

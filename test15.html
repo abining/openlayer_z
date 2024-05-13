@@ -58,28 +58,14 @@
         format: new ol.format.GeoJSON({
           defaultDataProjection: "EPSG:4326", // 确保数据的坐标投影与你的地图一致
         }),
-        // url: function (extent) {
-        //   // 构建请求URL，使用当前地图的视图范围（bbox）
-        //   var urlstr =
-        //     "http://localhost:8080/geoserver/webgis/ows?" +
-        //     "service=WFS&" +
-        //     "version=1.0.0&" +
-        //     "request=GetFeature&" +
-        //     "typeName=webgis%3Aroad2_line&" +
-        //     "maxFeatures=50&" +
-        //     "outputFormat=application%2Fjson&" +
-        //     "bbox=" +
-        //     extent.join(","); // 将视图范围的坐标拼接到URL中
-        //   return urlstr;
-        // },
         // url: function(extent) {
-				// 	var urlstr = 'http://localhost:8080/geoserver/url/ows?' +
-				// 		'service=WFS&version=1.0.0&request=GetFeature&typeName=url:road2_line' +
+				// 	var urlstr = 'http://localhost:8080/geoserver/webgis/ows?' +
+				// 		'service=WFS&version=1.0.0&request=GetFeature&typeName=WebGIS:road1_line' +
 				// 		'&outputFormat=application/json&srsname=EPSG:4326&' +
 				// 		'bbox=' + extent.join(',');
-				// 	console.log(urlstr)
+				// 	console.log(urlstr,'url')
 				// 	return urlstr;
-        // },
+				// }
         url: "rold2.json", // 确保文件名与实际文件相匹配
       });
       // 实例化矢量图层
@@ -91,6 +77,10 @@
             color: "#ff0000",
             width: 5,
           }),
+          fill: new ol.style.Fill({  
+        // 设置填充颜色为红色，并带有透明度（这里设置为50%的透明度）  
+        color: 'rgba(0, 0, 0, 1)' // RGBA颜色，最后一个参数是alpha透明度（0-1）  
+      })  
         }),
       });
 
@@ -100,7 +90,7 @@
       // 调试代码
       var layers = map.getLayers();
       console.log(layers, "layers");
-
+      map.render()
       // 加载图层控制
       loadLayerControl(map, "layerTree");
     </script>
