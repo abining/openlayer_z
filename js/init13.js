@@ -1,13 +1,14 @@
 function mapinit(id) {
   var projection = new ol.proj.Projection({
-    code:'EPSG:4326',
-    units:'degrees'
-  })
+    code: "EPSG:4326",
+    units: "degrees",
+  });
   var map = new ol.Map({
     target: id,
     view: new ol.View({
-      // projection:projection,
-      center: ol.proj.fromLonLat([120, 30]), // 重庆
+      projection: projection, // 如果没有指定坐标系，则默认为EPSG:3857
+      center: [120, 30],
+      // center: ol.proj.fromLonLat([120, 30]), // 重庆
       maxZoom: 15,
       minZoom: 7,
       zoom: 5,
@@ -58,12 +59,11 @@ function mapinit(id) {
 				}
 			})
 
-			var wmsTiledLayer = new ol.layer.Tile({
-				title: 'wmsTiled道路',
-				source: wmsTiledSource
-			})
-			map.addLayer(wmsTiledLayer)
-
+  var wmsTiledLayer = new ol.layer.Tile({
+    title: "wmsTiled道路",
+    source: wmsTiledSource,
+  });
+  map.addLayer(wmsTiledLayer);
 
   // 添加滑动控制缩放的控件
   map.addControl(new ol.control.ZoomSlider());
@@ -80,7 +80,8 @@ function mapinit(id) {
   var ZoomToExtent = new ol.control.ZoomToExtent({
     tipLable: "初始区域",
     //使用es6的对象属性简写方法。
-    extent,
+    // extent,
+    extent: [106.2554, 29.4914, 106.7226, 30.1987],
   });
   // 添加zoomtoextent控件
   map.addControl(ZoomToExtent);
