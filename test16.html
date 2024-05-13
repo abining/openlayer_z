@@ -1,198 +1,201 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>test16</title>
-    <script src="./package/dist/ol.js"></script>
-    <link rel="stylesheet" type="text/css" href="./package/ol.css" />
 
-    <script src="./js/mapUtils.js"></script>
-    <script src="./js/init16.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <link rel="stylesheet" type="text/css" href="./css/map10.css" />
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <title>test16</title>
+  <script src="./package/dist/ol.js"></script>
+  <link rel="stylesheet" type="text/css" href="./package/ol.css" />
 
-  <body>
-    <div id="map">
-      <div id="layControl" class="layControl">
-        <div class="title"><label>图层列表</label></div>
-        <!-- 这是一个无序列表，用于展示图层控制列表 -->
-        <ul id="layerTree" class="layerTree"></ul>
-        <button id="button">跳到村子里</button>
-      </div>
-      <div id="mouse-position"></div>
+  <script src="./js/mapUtils.js"></script>
+  <script src="./js/init16.js"></script>
+  <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  <link rel="stylesheet" type="text/css" href="./css/map10.css" />
+</head>
+
+<body>
+  <div id="map">
+    <div id="layControl" class="layControl">
+      <div class="title"><label>图层列表</label></div>
+      <!-- 这是一个无序列表，用于展示图层控制列表 -->
+      <ul id="layerTree" class="layerTree"></ul>
+      <button id="button">跳到村子里</button>
     </div>
+    <div id="mouse-position"></div>
+  </div>
 
-    <script>
-      var map = mapinit("map", 120, 30, 9);
+  <script>
+    var map = mapinit("map", 120, 30, 9);
 
-      // 实例化自定义的缩放控件，传入lebel，并且添加到地图中
-      map.addControl(
-        new ol.control.Zoom({
-          zoomInTipLabel: "放大",
-          zoomOutTipLabel: "缩小",
-        })
-      );
-      //加入鹰眼效果
-      var overviewMap = new ol.control.OverviewMap({
-        collapsed: false,
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.XYZ({
-              ur1: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
-              wrapX: false,
-            }),
+    // 实例化自定义的缩放控件，传入lebel，并且添加到地图中
+    map.addControl(
+      new ol.control.Zoom({
+        zoomInTipLabel: "放大",
+        zoomOutTipLabel: "缩小",
+      })
+    );
+    //加入鹰眼效果
+    var overviewMap = new ol.control.OverviewMap({
+      collapsed: false,
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.XYZ({
+            ur1: "http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+            wrapX: false,
           }),
-          new ol.layer.Tile({
-            source: new ol.source.XYZ({
-              url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
-              wrapX: false,
-            }),
-          }),
-        ],
-      });
-      map.addControl(overviewMap);
-      // 实例化wfs资源
-      var wfsSource = new ol.source.Vector({
-        // format: new ol.format.GeoJSON(),
-        // 这里可以选择性地取消注释并修正下面的url生成函数
-        format: new ol.format.GeoJSON({
-          defaultDataProjection: "EPSG:4326", // 确保数据的坐标投影与你的地图一致
         }),
-        url: "rold2.json", // 确保文件名与实际文件相匹配
-      });
-      // 实例化矢量图层
-      var wfslayer = new ol.layer.Vector({
-        title: "2级道路",
-        source: wfsSource,
-        style: new ol.style.Style({
+        new ol.layer.Tile({
+          source: new ol.source.XYZ({
+            url: "http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=2a16e0c0544e2cbee46965bee22b1f0c",
+            wrapX: false,
+          }),
+        }),
+      ],
+    });
+    map.addControl(overviewMap);
+    // 实例化wfs资源
+    var wfsSource = new ol.source.Vector({
+      // format: new ol.format.GeoJSON(),
+      // 这里可以选择性地取消注释并修正下面的url生成函数
+      format: new ol.format.GeoJSON({
+        defaultDataProjection: "EPSG:4326", // 确保数据的坐标投影与你的地图一致
+      }),
+      url: "rold2.json", // 确保文件名与实际文件相匹配
+    });
+    // 实例化矢量图层
+    var wfslayer = new ol.layer.Vector({
+      title: "2级道路",
+      source: wfsSource,
+      style: new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: "#ff0000",
+          width: 5,
+        }),
+      }),
+    });
+
+    // 加载图层到Map实例
+    map.addLayer(wfslayer);
+    // 文伟村
+    var wfsSourcew = new ol.source.Vector({
+      // format: new ol.format.GeoJSON(),
+      // 这里可以选择性地取消注释并修正下面的url生成函数
+      format: new ol.format.GeoJSON({
+        defaultDataProjection: "EPSG:4326", // 确保数据的坐标投影与你的地图一致
+      }),
+      url: "res.json", // 确保文件名与实际文件相匹配
+    });
+
+    // 实例化矢量图层
+    var wfslayerw = new ol.layer.Vector({
+      title: "庆富村",
+      source: wfsSourcew,
+      style: function (feature) {
+        // 定义颜色
+        var colors = [
+          "#16cefc",
+          "#aa0000",
+          "#aaff00",
+          "#aaaa00",
+          "#0000ff",
+          "#ff55ff",
+          "#ff0000",
+          "#ffaa00",
+          "#55007f",
+          "#55ffff",
+          "#ff007f",
+          "#ff557f",
+        ];
+        var type = feature.get("TBLXMC");
+        var drawcolor = ''
+        switch (type) {
+          case "公路":
+            drawcolor = colors[0];
+            break;
+          case "矮灌木":
+            drawcolor = colors[1];
+            break;
+          case "居民房屋":
+            drawcolor = colors[2];
+            break;
+          case "农作物":
+            drawcolor = colors[3];
+            break;
+          case "农村其他":
+            drawcolor = colors[4];
+            break;
+          case "其他道路":
+            drawcolor = colors[5];
+            break;
+          case "其他建设":
+            drawcolor = colors[6];
+            break;
+          case "其他林地":
+            drawcolor = colors[7];
+            break;
+          case "其他陈设":
+            drawcolor = colors[8];
+            break;
+          case "其他水域":
+            drawcolor = colors[9];
+            break;
+          case "其他用地":
+            drawcolor = colors[10];
+            break;
+          case "其他其他":
+            drawcolor = colors[11];
+            break;
+          default:
+            drawcolor = '#fff'
+            break;
+        }
+        let style = new ol.style.Style({
           stroke: new ol.style.Stroke({
-            color: "#ff0000",
-            width: 5,
+            color: '#6b6b6b',
+            width: 1
           }),
-        }),
-      });
+          fill: new ol.style.Fill({
+            color: drawcolor
+          }),
+          text: new ol.style.Text({
+            text: type
+          })
+        })
 
-      // 加载图层到Map实例
-      map.addLayer(wfslayer);
-      // 文伟村
-      var wfsSourcew = new ol.source.Vector({
-        // format: new ol.format.GeoJSON(),
-        // 这里可以选择性地取消注释并修正下面的url生成函数
-        format: new ol.format.GeoJSON({
-          defaultDataProjection: "EPSG:4326", // 确保数据的坐标投影与你的地图一致
-        }),
-        url: "res.json", // 确保文件名与实际文件相匹配
-      });
+        return style
+      },
+    });
 
-      // 实例化矢量图层
-      var wfslayerw = new ol.layer.Vector({
-        title: "庆富村",
-        source: wfsSourcew,
-        style: function (feature) {
-          // 定义颜色
-          var colors = [
-            "#16cefc",
-            "#aa0000",
-            "#aaff00",
-            "#aaaa00",
-            "#0000ff",
-            "#ff55ff",
-            "#ff0000",
-            "#ffaa00",
-            "#55007f",
-            "#55ffff",
-            "#ff007f",
-            "#ff557f",
-          ];
-          var type = feature.get("TBLXMC");
-		  var drawcolor = ''
-          switch (type) {
-            case "公路":
-              drawcolor = colors[0];
-              break;
-            case "矮灌木":
-              drawcolor = colors[1];
-              break;
-            case "居民房屋":
-              drawcolor = colors[2];
-              break;
-            case "农作物":
-              drawcolor = colors[3];
-              break;
-            case "农村其他":
-              drawcolor = colors[4];
-              break;
-            case "其他道路":
-              drawcolor = colors[5];
-              break;
-            case "其他建设":
-              drawcolor = colors[6];
-              break;
-            case "其他林地":
-              drawcolor = colors[7];
-              break;
-            case "其他陈设":
-              drawcolor = colors[8];
-              break;
-            case "其他水域":
-              drawcolor = colors[9];
-              break;
-            case "其他用地":
-              drawcolor = colors[10];
-              break;
-            case "其他其他":
-              drawcolor = colors[11];
-              break;
-            default:
-				drawcolor = '#fff'
-              break;
-          }
-		  let style = new ol.style.Style({
-			stroke:new ol.style.Stroke({
-				color:'#6b6b6b',
-				width:1
-			}),
-			fill: new ol.style.Fill({
-				color:drawcolor
-			}),
-			text: new ol.style.Text({
-				text:type
-			})
-		  })
+    // 加载图层到Map实例
+    map.addLayer(wfslayerw);
 
-		  return style
-        },
-      });
+    // 调试代码
+    var layers = map.getLayers();
+    console.log(layers, "layers");
 
-      // 加载图层到Map实例
-      map.addLayer(wfslayerw);
+    function zoomToLocation(map, longitude, latitude, zoomLevel) {
+      // 将经纬度转换为OpenLayers的坐标格式,现在不需要了
+      // var coord = ol.proj.fromLonLat([longitude, latitude]);
 
-      // 调试代码
-      var layers = map.getLayers();
-      console.log(layers, "layers");
+      // 获取当前的视图
+      let view = map.getView();
 
-      function zoomToLocation(map, longitude, latitude, zoomLevel) {
-        // 将经纬度转换为OpenLayers的坐标格式
-        var coord = ol.proj.fromLonLat([longitude, latitude]);
+      // 设置视图的中心点和缩放级别
+      view.setCenter([longitude, latitude]);
+      view.setZoom(zoomLevel);
+    }
 
-        // 获取当前的视图
-        var view = map.getView();
+    // 使用方法
+    // 假设map是你的OpenLayers地图实例，缩放级别为12
+    let buttonDrop = document.getElementById("button");
+    buttonDrop.addEventListener("click", () => {
+      console.log('click')
+      zoomToLocation(map, 127.48453635200008, 46.89495381100005, 12);
+    });
 
-        // 设置视图的中心点和缩放级别
-        view.setCenter(coord);
-        view.setZoom(zoomLevel);
-      }
+    // 加载图层控制
+    loadLayerControl(map, "layerTree");
+  </script>
+</body>
 
-      // 使用方法
-      // 假设map是你的OpenLayers地图实例，缩放级别为12
-      let buttonDrop = document.getElementById("button");
-      buttonDrop.addEventListener("click", () => {
-        zoomToLocation(map, 127.48453635200008, 46.89495381100005, 12);
-      });
-
-      // 加载图层控制
-      loadLayerControl(map, "layerTree");
-    </script>
-  </body>
 </html>
