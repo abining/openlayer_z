@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>test17</title>
+  <title>test18</title>
   <script src="./package/dist/ol.js"></script>
   <link rel="stylesheet" type="text/css" href="./package/ol.css" />
 
@@ -15,11 +15,20 @@
 
 <body>
   <div id="map">
+    <div style="height: 20px;">
+      <form style="position:absolute;left:20px;z-index:999;color:blue;">
+        <label>半径大小</label>
+        <input id="radius" type="range" min="1" max="50" step="1" value="20" />
+
+        <label>模糊大小</label>
+        <input id="blur" type="range" min="1" max="50" step="1" value="25" />
+      </form>
+    </div>
     <div id="layControl" class="layControl">
       <div class="title"><label>图层列表</label></div>
       <!-- 这是一个无序列表，用于展示图层控制列表 -->
       <ul id="layerTree" class="layerTree"></ul>
-      <button id="button">跳到村子里</button>
+      <button id="button">跳到村子里</button><button id="button2">跳到广州万达</button>
     </div>
     <!-- 添加页面右键的弹出框 -->
     <div id="popup" class="ol-popup">
@@ -72,30 +81,9 @@
       ],
     });
     map.addControl(overviewMap);
-    // 实例化wfs资源
-    var wfsSource = new ol.source.Vector({
-      // format: new ol.format.GeoJSON(),
-      // 这里可以选择性地取消注释并修正下面的url生成函数
-      format: new ol.format.GeoJSON({
-        defaultDataProjection: "EPSG:4326", // 确保数据的坐标投影与你的地图一致
-      }),
-      url: "rold2.json", // 确保文件名与实际文件相匹配
-    });
-    // 实例化矢量图层
-    var wfslayer = new ol.layer.Vector({
-      title: "2级道路",
-      source: wfsSource,
-      style: new ol.style.Style({
-        stroke: new ol.style.Stroke({
-          color: "#ff0000",
-          width: 5,
-        }),
-      }),
-    });
 
-    // 加载图层到Map实例
-    map.addLayer(wfslayer);
-    // 文伟村
+
+    // 添加庆富村
     var wfsSourcew = new ol.source.Vector({
       // format: new ol.format.GeoJSON(),
       // 这里可以选择性地取消注释并修正下面的url生成函数
@@ -188,10 +176,49 @@
     // 加载图层到Map实例
     map.addLayer(wfslayerw);
 
-    // 调试代码
-    var layers = map.getLayers();
-    console.log(layers, "layers");
 
+
+    // 获取半径、模糊度拖动元素
+    var blur = document.getElementById("blur");
+    var radius = document.getElementById("radius");
+
+    // 根据 wanda.json 建立矢量数据源
+    var vectorSource = new ol.source.Vector({
+
+      url: 'wanda.json',
+      format: new ol.format.GeoJSON()
+    });
+
+    // 定义热力图图层
+    var vectorLayer = new ol.layer.Heatmap({
+      title: '热力图',
+      source: vectorSource,
+      blur: parseInt(blur.value),
+      radius: parseInt(radius.value)
+    });
+    // 模糊元素的事件回调函数 blurHandler
+    function blurHandler() {
+      // setBlur
+      vectorLayer.setBlur(parseInt(blur.value));
+    }
+    // 添加事件：
+    blur.addEventListener("input", blurHandler);
+    blur.addEventListener("change", blurHandler);
+    // 半径元素的事件回调函数 radiusHandler
+    function radiusHandler() {
+      // 调用热力图图层的setRadius方法设置图层的半径，正确设置传入参数
+      vectorLayer.setRadius(parseInt(radius.value));
+    }
+
+    // 半径元素 radius 添加 "input" 和 "change" 事件，响应方法设置为前文建立的 radiusHandler 方法，实现改变后动态调整热力图图层的半径功能
+    radius.addEventListener("input", radiusHandler);
+    radius.addEventListener("change", radiusHandler);
+
+    // 利用 map 的 addLayer 方法，将热力图 vector 加入到地图中
+    map.addLayer(vectorLayer);
+
+
+    // 创建跳转的方法
     function zoomToLocation(map, longitude, latitude, zoomLevel) {
       // 将经纬度转换为OpenLayers的坐标格式
       // var coord = ol.proj.fromLonLat([longitude, latitude]);
@@ -204,24 +231,33 @@
       view.setZoom(zoomLevel);
     }
 
-    // 使用方法
-    // 假设map是你的OpenLayers地图实例，缩放级别为12
+    // 跳转函数的使用方法
+    // 假设map是你的OpenLayers地图实例，缩放级别为14
     let buttonDrop = document.getElementById("button");
     buttonDrop.addEventListener("click", () => {
-      zoomToLocation(map, 127.48453635200008, 46.89495381100005, 12);
+      zoomToLocation(map, 127.48453635200008, 46.89495381100005, 14);
     });
-    // 获取dom元素
+    let buttonDrop2 = document.getElementById("button2");
+    buttonDrop2.addEventListener("click", () => {
+      zoomToLocation(map, 113.320541, 23.089375, 14);
+    });
+
+
+
+    // 创建一个弹出窗口
+
+    // 1.获取dom元素
     var container = document.getElementById("popup");
     var content = document.getElementById("popup-content");
     var popupCloser = document.getElementById("popup-close-button");
 
-    // 实例化ol.Overlay接口
+    // 2.实例化ol.Overlay接口
     var overlay = new ol.Overlay({
       element: container,
       autoPan: true,
     })
 
-    // 设置地图点击事件
+    // 3.设置地图点击事件
     map.on("click", function (event) {
       // 用map.forEachFeatureAtPixel方法，获取点击到的要素，该方法两个参数，第一个是点击的坐标位置（evt.pixel），第二个是方法（参数要素、图层），方法体内直接返回图层
       var feature = map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
@@ -232,15 +268,23 @@
         // 用getProperties方法获取要素的属性
         var attr = feature.getProperties();
         console.log(attr, 'attr')
-
-        // 等号后，用ul与li元素，以列表框形式进行html编写，所在县，所在市，id，所在村，类型。
+        // 庆富村的
+        // // 等号后，用ul与li元素，以列表框形式进行html编写，所在县，所在市，id，所在村，类型。
+        // content.innerHTML = "<ul>" +
+        //   "<li>id：" + attr.FID + "</li>" +
+        //   "<li>所在县：" + attr.QXMC + "</li>" +
+        //   "<li>所在市：" + attr.DSMC + "</li>" +
+        //   "<li>所在村：" + attr.CUNMC + "</li>" +
+        //   "<li>类型：" + attr.TBLXMC + "</li>" +
+        //   "</ul>";
+        // 万达的
         content.innerHTML = "<ul>" +
-          "<li>id：" + attr.FID + "</li>" +
-          "<li>所在县：" + attr.QXMC + "</li>" +
-          "<li>所在市：" + attr.DSMC + "</li>" +
-          "<li>所在村：" + attr.CUNMC + "</li>" +
-          "<li>类型：" + attr.TBLXMC + "</li>" +
+          "<li>名称：" + attr.name + "</li>" +
+          "<li>经度：" + attr.lng + "</li>" +
+          "<li>纬度：" + attr.lat + "</li>" +
+          "<li>地址：" + attr.address + "</li>" +
           "</ul>";
+
         // 而后获取坐标位置，设置overlay的位置f
         overlay.setPosition(event.coordinate);
         // 用map的addOverlay方法，将上述的overlay加入到map中
@@ -249,13 +293,13 @@
         overlay.setPosition(undefined);
       }
     })
-    // 设置关闭按钮的事件，实现点击关闭详情框
+    // 4.设置关闭按钮的事件，实现点击关闭详情框
     popupCloser.addEventListener("click", function () {
       console.log(111)
       overlay.setPosition(undefined);
     })
 
-    // 置地图鼠标移动事件，实现移动到要素上变手型指针
+    // 5.置地图鼠标移动事件，实现移动到要素上变手型指针
     map.on("pointermove", function (evt) {
       // 获取位置
       var pixel = map.getEventPixel(evt.originalEvent);
@@ -267,6 +311,7 @@
       map.getTargetElement().style.cursor = hit ? "pointer" : "";
 
     })
+
     // 加载图层控制
     loadLayerControl(map, "layerTree");
   </script>

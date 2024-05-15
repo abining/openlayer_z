@@ -1,8 +1,8 @@
 function mapinit(id) {
   var projection = new ol.proj.Projection({
-    code:'EPSG:4326',
-    units:'degrees'
-  })
+    code: "EPSG:4326",
+    units: "degrees",
+  });
   var map = new ol.Map({
     target: id,
     view: new ol.View({
@@ -30,40 +30,38 @@ function mapinit(id) {
   map.addLayer(veclayer);
   map.addLayer(vcalayer);
 
+  //添加新的图层（本机的自定义的图层）
+  var wmsSource = new ol.source.ImageWMS({
+    url: "http://localhost:8080/geoserver/webgis/wms",
+    params: {
+      FORMAT: "image/png",
+      VERSION: "1.1.1",
+      LAYERS: "webgis:webgis-roads",
+    },
+  });
 
-  		//添加新的图层（本机的自定义的图层）
-      var wmsSource = new ol.source.ImageWMS({
-        url:'http://localhost:8080/geoserver/webgis/wms',
-        params:{
-          'FORMAT':'image/png',
-          'VERSION':'1.1.1',
-          'LAYERS':'webgis:webgis-roads'
-        }
-      })
-  
-      var wmsLayer = new ol.layer.Image({
-        title:'wms道路',
-        source:wmsSource
-      })
-  
-      map.addLayer(wmsLayer)
-//添加title道路
-      var wmsTiledSource = new ol.source.TileWMS({
-				url: 'http://localhost:8080/geoserver/url/wms',
-				params: {
-					'FORMAT': 'image/png',
-					'VERSION': '1.1.1',
-					"LAYERS": 'webgis:webgis-roads',
-					tiled: true
-				}
-			})
+  var wmsLayer = new ol.layer.Image({
+    title: "wms道路",
+    source: wmsSource,
+  });
 
-			var wmsTiledLayer = new ol.layer.Tile({
-				title: 'wmsTiled道路',
-				source: wmsTiledSource
-			})
-			map.addLayer(wmsTiledLayer)
+  map.addLayer(wmsLayer);
+  //添加title道路
+  var wmsTiledSource = new ol.source.TileWMS({
+    url: "http://localhost:8080/geoserver/webgis/wms",
+    params: {
+      FORMAT: "image/png",
+      VERSION: "1.1.1",
+      LAYERS: "webgis:webgis-roads",
+      tiled: true,
+    },
+  });
 
+  var wmsTiledLayer = new ol.layer.Tile({
+    title: "wmsTiled道路",
+    source: wmsTiledSource,
+  });
+  map.addLayer(wmsTiledLayer);
 
   // 添加滑动控制缩放的控件
   map.addControl(new ol.control.ZoomSlider());
@@ -94,17 +92,15 @@ function mapinit(id) {
   // 全图显示	FullScreen
   map.addControl(new ol.control.FullScreen());
 
-
-
   // 添加图层切换控件
   return map;
 }
 
 function mapinit(id) {
   var projection = new ol.proj.Projection({
-    code:'EPSG:4326',
-    units:'degrees'
-  })
+    code: "EPSG:4326",
+    units: "degrees",
+  });
   var map = new ol.Map({
     target: id,
     view: new ol.View({
@@ -132,40 +128,38 @@ function mapinit(id) {
   map.addLayer(veclayer);
   map.addLayer(vcalayer);
 
+  //添加新的图层（本机的自定义的图层）
+  var wmsSource = new ol.source.ImageWMS({
+    url: "http://localhost:8080/geoserver/webgis/wms",
+    params: {
+      FORMAT: "image/png",
+      VERSION: "1.1.1",
+      LAYERS: "webgis:webgis-roads",
+    },
+  });
 
-  		//添加新的图层（本机的自定义的图层）
-      var wmsSource = new ol.source.ImageWMS({
-        url:'http://localhost:8080/geoserver/webgis/wms',
-        params:{
-          'FORMAT':'image/png',
-          'VERSION':'1.1.1',
-          'LAYERS':'webgis:webgis-roads'
-        }
-      })
-  
-      var wmsLayer = new ol.layer.Image({
-        title:'wms道路',
-        source:wmsSource
-      })
-  
-      map.addLayer(wmsLayer)
-//添加title道路
-      var wmsTiledSource = new ol.source.TileWMS({
-				url: 'http://localhost:8080/geoserver/url/wms',
-				params: {
-					'FORMAT': 'image/png',
-					'VERSION': '1.1.1',
-					"LAYERS": 'webgis:webgis-roads',
-					tiled: true
-				}
-			})
+  var wmsLayer = new ol.layer.Image({
+    title: "wms道路",
+    source: wmsSource,
+  });
 
-			var wmsTiledLayer = new ol.layer.Tile({
-				title: 'wmsTiled道路',
-				source: wmsTiledSource
-			})
-			map.addLayer(wmsTiledLayer)
+  map.addLayer(wmsLayer);
+  //添加title道路
+  var wmsTiledSource = new ol.source.TileWMS({
+    url: "http://localhost:8080/geoserver/webgis/wms",
+    params: {
+      FORMAT: "image/png",
+      VERSION: "1.1.1",
+      LAYERS: "webgis:webgis-roads",
+      tiled: true,
+    },
+  });
 
+  var wmsTiledLayer = new ol.layer.Tile({
+    title: "wmsTiled道路",
+    source: wmsTiledSource,
+  });
+  map.addLayer(wmsTiledLayer);
 
   // 添加滑动控制缩放的控件
   map.addControl(new ol.control.ZoomSlider());
